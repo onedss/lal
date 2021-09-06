@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -9,8 +9,8 @@
 package hls
 
 import (
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/mpegts"
+	"github.com/onedss/lal/pkg/base"
+	"github.com/onedss/lal/pkg/mpegts"
 )
 
 // 缓存流起始的一些数据，判断流中是否存在音频、视频，以及编码格式

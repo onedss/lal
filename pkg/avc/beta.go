@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,12 +11,12 @@ package avc
 import (
 	"encoding/hex"
 
-	"github.com/q191201771/naza/pkg/nazaerrors"
+	"github.com/onedss/naza/pkg/nazaerrors"
 
-	"github.com/q191201771/naza/pkg/bele"
-	"github.com/q191201771/naza/pkg/nazabits"
-	"github.com/q191201771/naza/pkg/nazalog"
-	"github.com/q191201771/naza/pkg/nazastring"
+	"github.com/onedss/naza/pkg/bele"
+	"github.com/onedss/naza/pkg/nazabits"
+	"github.com/onedss/naza/pkg/nazalog"
+	"github.com/onedss/naza/pkg/nazastring"
 )
 
 func ParseSps(payload []byte, ctx *Context) error {

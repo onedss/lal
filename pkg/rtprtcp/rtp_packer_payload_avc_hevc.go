@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -9,9 +9,9 @@
 package rtprtcp
 
 import (
-	"github.com/q191201771/lal/pkg/avc"
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/hevc"
+	"github.com/onedss/lal/pkg/avc"
+	"github.com/onedss/lal/pkg/base"
+	"github.com/onedss/lal/pkg/hevc"
 )
 
 type RtpPackerPayloadAvcHevcType int

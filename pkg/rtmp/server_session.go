@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -14,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/onedss/lal/pkg/base"
 
-	"github.com/q191201771/naza/pkg/bele"
-	"github.com/q191201771/naza/pkg/connection"
-	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/onedss/naza/pkg/bele"
+	"github.com/onedss/naza/pkg/connection"
+	"github.com/onedss/naza/pkg/nazalog"
 )
 
 // TODO chef: 没有进化成Pub Sub时的超时释放

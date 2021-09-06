@@ -73,7 +73,7 @@
 - [fix] rtsp推流时，rtp包时间戳翻转导致的错误（比如长时间推流后hls一直强制切片）
 - [fix] lalserver的group中，rtsp sub超时时，锁重入导致服务器异常阻塞不响应
 - [fix] 修复mipsle架构下rtsp崩溃
-- [fix] 修复lalserver中（rtsp.BaseInSession以及logic.Group）的一些竞态读写，https://github.com/q191201771/lal/issues/47
+- [fix] 修复lalserver中（rtsp.BaseInSession以及logic.Group）的一些竞态读写，https://github.com/onedss/lal/issues/47
 - [fix] demo: 两个拉httpflv流的demo，main函数退出前忘记等待拉流结束
 - [refactor] package rtprtcp: 重构一些函数名
 - [refactor] package rtprtcp: 重构rtp unpacker，业务方可以使用默认的container，protocol策略，也可以自己实现特定的协议解析组包策略

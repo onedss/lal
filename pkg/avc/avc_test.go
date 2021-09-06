@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -13,14 +13,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/q191201771/naza/pkg/nazabits"
-	"github.com/q191201771/naza/pkg/nazaerrors"
+	"github.com/onedss/naza/pkg/nazabits"
+	"github.com/onedss/naza/pkg/nazaerrors"
 
-	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/onedss/naza/pkg/nazalog"
 
-	"github.com/q191201771/lal/pkg/avc"
+	"github.com/onedss/lal/pkg/avc"
 
-	"github.com/q191201771/naza/pkg/assert"
+	"github.com/onedss/naza/pkg/assert"
 )
 
 func TestParseNaluType(t *testing.T) {

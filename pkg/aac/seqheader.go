@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -8,7 +8,7 @@
 
 package aac
 
-import "github.com/q191201771/naza/pkg/nazabits"
+import "github.com/onedss/naza/pkg/nazabits"
 
 // TODO(chef) 这个文件的部分内容可以考虑放到package base中
 

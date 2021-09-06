@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -13,7 +13,7 @@ import (
 	"encoding/hex"
 	"strings"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/onedss/lal/pkg/base"
 )
 
 func ParseAsc(a *AFmtPBase) ([]byte, error) {

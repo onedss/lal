@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -17,19 +17,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/q191201771/naza/pkg/nazastring"
+	"github.com/onedss/naza/pkg/nazastring"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/onedss/lal/pkg/base"
 
-	"github.com/q191201771/lal/pkg/rtmp"
+	"github.com/onedss/lal/pkg/rtmp"
 
-	"github.com/q191201771/lal/pkg/avc"
-	"github.com/q191201771/lal/pkg/hevc"
-	"github.com/q191201771/naza/pkg/bele"
-	"github.com/q191201771/naza/pkg/bitrate"
+	"github.com/onedss/lal/pkg/avc"
+	"github.com/onedss/lal/pkg/hevc"
+	"github.com/onedss/naza/pkg/bele"
+	"github.com/onedss/naza/pkg/bitrate"
 
-	"github.com/q191201771/lal/pkg/httpflv"
-	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/onedss/lal/pkg/httpflv"
+	"github.com/onedss/naza/pkg/nazalog"
 )
 
 // 分析诊断HTTP-FLV流的时间戳。注意，这个程序还没有完成。

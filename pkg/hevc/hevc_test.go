@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/onedss/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,8 +11,8 @@ package hevc_test
 import (
 	"testing"
 
-	"github.com/q191201771/lal/pkg/hevc"
-	"github.com/q191201771/naza/pkg/assert"
+	"github.com/onedss/lal/pkg/hevc"
+	"github.com/onedss/naza/pkg/assert"
 )
 
 // http://ffmpeg.org/doxygen/trunk/hevc_8c_source.html

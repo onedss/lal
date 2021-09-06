@@ -19,9 +19,9 @@ mkdir -p ${ROOT_DIR}/${OUT_DIR}/${prefix}windows/conf
 echo ${v} >> ${ROOT_DIR}/${OUT_DIR}/${prefix}linux/README.txt
 echo ${v} >> ${ROOT_DIR}/${OUT_DIR}/${prefix}macos/README.txt
 echo ${v} >> ${ROOT_DIR}/${OUT_DIR}/${prefix}windows/README.txt
-echo 'github: https://github.com/q191201771/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}linux/README.txt
-echo 'github: https://github.com/q191201771/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}macos/README.txt
-echo 'github: https://github.com/q191201771/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}windows/README.txt
+echo 'github: https://github.com/onedss/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}linux/README.txt
+echo 'github: https://github.com/onedss/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}macos/README.txt
+echo 'github: https://github.com/onedss/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}windows/README.txt
 echo 'doc: https://pengrl.com/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}linux/README.txt
 echo 'doc: https://pengrl.com/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}macos/README.txt
 echo 'doc: https://pengrl.com/lal' >> ${ROOT_DIR}/${OUT_DIR}/${prefix}windows/README.txt
@@ -40,11 +40,11 @@ BuildTime=`date +'%Y.%m.%d.%H%M%S'`
 BuildGoVersion=`go version`
 
 LDFlags=" \
-    -X 'github.com/q191201771/naza/pkg/bininfo.GitTag=${GitTag}' \
-    -X 'github.com/q191201771/naza/pkg/bininfo.GitCommitLog=${GitCommitLog}' \
-    -X 'github.com/q191201771/naza/pkg/bininfo.GitStatus=${GitStatus}' \
-    -X 'github.com/q191201771/naza/pkg/bininfo.BuildTime=${BuildTime}' \
-    -X 'github.com/q191201771/naza/pkg/bininfo.BuildGoVersion=${BuildGoVersion}' \
+    -X 'github.com/onedss/naza/pkg/bininfo.GitTag=${GitTag}' \
+    -X 'github.com/onedss/naza/pkg/bininfo.GitCommitLog=${GitCommitLog}' \
+    -X 'github.com/onedss/naza/pkg/bininfo.GitStatus=${GitStatus}' \
+    -X 'github.com/onedss/naza/pkg/bininfo.BuildTime=${BuildTime}' \
+    -X 'github.com/onedss/naza/pkg/bininfo.BuildGoVersion=${BuildGoVersion}' \
 "
 
 export CGO_ENABLED=0
