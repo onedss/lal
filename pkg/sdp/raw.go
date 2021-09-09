@@ -26,6 +26,7 @@ type MediaDesc struct {
 
 type M struct {
 	Media string
+	PayloadType        int
 }
 
 type ARtpMap struct {
@@ -111,6 +112,12 @@ func ParseM(s string) (ret M, err error) {
 		return ret, ErrSdp
 	}
 	ret.Media = items[0]
+	if len(items) == 4 {
+		ret.PayloadType, err = strconv.Atoi(items[3])
+		if err != nil {
+			return ret, ErrSdp
+		}
+	}
 	return
 }
 

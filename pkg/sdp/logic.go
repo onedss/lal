@@ -115,8 +115,11 @@ func ParseSdp2LogicContext(b []byte) (LogicContext, error) {
 			ret.hasAudio = true
 			ret.AudioClockRate = md.ARtpMap.ClockRate
 			ret.audioAControl = md.AControl.Value
-
-			ret.audioPayloadTypeOrigin = md.ARtpMap.PayloadType
+			if md.ARtpMap.EncodingName == "" {
+				ret.audioPayloadTypeOrigin = md.M.PayloadType
+			}else{
+				ret.audioPayloadTypeOrigin = md.ARtpMap.PayloadType
+			}
 			if md.ARtpMap.EncodingName == ARtpMapEncodingNameAac {
 				ret.audioPayloadTypeBase = base.AvPacketPtAac
 				if md.AFmtPBase != nil {
