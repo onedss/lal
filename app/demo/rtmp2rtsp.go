@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"github.com/onedss/lal/pkg/base"
@@ -53,8 +54,8 @@ func pull(rtmpUrl string, rtspUrl string, filename string) {
 	}
 
 	pullSession := rtmp.NewPullSession(func(option *rtmp.PullSessionOption) {
-		option.PullTimeoutMs = 10000
-		option.ReadAvTimeoutMs = 10000
+		option.PullTimeoutMs = 30000
+		option.ReadAvTimeoutMs = 30000
 	})
 	//pushSession := rtsp.NewPushSession(func(option *rtsp.PushSessionOption) {
 	//	option.OverTcp = true
@@ -64,13 +65,15 @@ func pull(rtmpUrl string, rtspUrl string, filename string) {
 	err = pullSession.Pull(rtmpUrl, func(msg base.RtmpMsg) {
 		if filename != "" {
 			if msg.Header.MsgTypeId == httpflv.TagTypeAudio {
-				//control := msg.Payload[0]
-				//nazalog.Println("MsgTypeId: ", control)
+				control := msg.Payload[0]
+				nazalog.Debugf("ControlId: 0x%0x", control)
 				err := w.WriteRaw(msg.Payload[1:])
 				nazalog.Assert(nil, err)
-			}else{
-				fmt.Println("MsgTypeId: ", msg.Header.MsgTypeId, " Skip...")
+			} else {
+				nazalog.Println("MsgTypeId: ", msg.Header.MsgTypeId, " Skip...")
 			}
+		} else {
+			nazalog.Println("BCD: ", hex.EncodeToString(msg.Payload[1:]))
 		}
 	}) // pull接收的数据放入remuxer中
 	if err != nil {
