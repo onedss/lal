@@ -19,6 +19,19 @@ import (
 	"github.com/onedss/lal/pkg/base"
 )
 
+func NewPack() (ctx LogicContext, err error) {
+	sdpStr := `v=0
+o=- 0 0 IN IP4 127.0.0.1
+c=IN IP4 127.0.0.1
+t=0 0
+m=audio 0 RTP/AVP 14
+a=control:trackID=1`
+
+	raw := []byte(strings.ReplaceAll(sdpStr, "\n", "\r\n"))
+	ctx, err = ParseSdp2LogicContext(raw)
+	return
+}
+
 func Pack(vps, sps, pps, asc []byte) (ctx LogicContext, err error) {
 	// 判断音频、视频是否存在，以及视频是H264还是H265
 	var hasAudio, hasVideo, isHevc bool

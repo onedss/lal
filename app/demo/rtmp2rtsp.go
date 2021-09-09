@@ -1,12 +1,15 @@
 package main
 
 import (
-	"encoding/hex"
 	"flag"
 	"fmt"
 	"github.com/onedss/lal/pkg/base"
 	"github.com/onedss/lal/pkg/httpflv"
+	"github.com/onedss/lal/pkg/remux"
 	"github.com/onedss/lal/pkg/rtmp"
+	"github.com/onedss/lal/pkg/rtprtcp"
+	"github.com/onedss/lal/pkg/rtsp"
+	"github.com/onedss/lal/pkg/sdp"
 	"github.com/onedss/naza/pkg/nazalog"
 	"os"
 	"sync"
@@ -57,25 +60,26 @@ func pull(rtmpUrl string, rtspUrl string, filename string) {
 		option.PullTimeoutMs = 30000
 		option.ReadAvTimeoutMs = 30000
 	})
-	//pushSession := rtsp.NewPushSession(func(option *rtsp.PushSessionOption) {
-	//	option.OverTcp = true
-	//})
+	pushSession := rtsp.NewPushSession(func(option *rtsp.PushSessionOption) {
+		option.OverTcp = true
+	})
+
+	remuxer := remux.NewRtmp2RtspRemuxer(
+		func(sdpCtx sdp.LogicContext) {
+			// remuxer完成前期工作，生成sdp并开始push
+			nazalog.Info("start push.")
+			err := pushSession.Push(rtspUrl, sdpCtx)
+			nazalog.Assert(nil, err)
+			nazalog.Info("push succ.")
+
+		},
+		func(pkt rtprtcp.RtpPacket) {
+			_ = pushSession.WriteRtpPacket(pkt) // remuxer的数据给push发送
+		},
+	)
 
 	nazalog.Info("start pull.")
-	err = pullSession.Pull(rtmpUrl, func(msg base.RtmpMsg) {
-		if filename != "" {
-			if msg.Header.MsgTypeId == httpflv.TagTypeAudio {
-				control := msg.Payload[0]
-				nazalog.Debugf("ControlId: 0x%0x", control)
-				err := w.WriteRaw(msg.Payload[1:])
-				nazalog.Assert(nil, err)
-			} else {
-				nazalog.Println("MsgTypeId: ", msg.Header.MsgTypeId, " Skip...")
-			}
-		} else {
-			nazalog.Println("BCD: ", hex.EncodeToString(msg.Payload[1:]))
-		}
-	}) // pull接收的数据放入remuxer中
+	err = pullSession.Pull(rtmpUrl, remuxer.OnRtmpMsg) // pull接收的数据放入remuxer中
 	if err != nil {
 		nazalog.Errorf("pull failed. err=%+v", err)
 		return

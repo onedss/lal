@@ -46,6 +46,7 @@ const (
 	HeaderAccept          = "Accept"
 	HeaderUserAgent       = "User-Agent"
 	HeaderCSeq            = "CSeq"
+	HeaderContentType     = "Content-Type"
 	HeaderContentLength   = "Content-Length"
 	HeaderTransport       = "Transport"
 	HeaderSession         = "Session"

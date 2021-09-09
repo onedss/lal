@@ -383,7 +383,7 @@ func (session *ClientCommandSession) writeDescribe() error {
 
 func (session *ClientCommandSession) writeAnnounce() error {
 	headers := map[string]string{
-		HeaderAccept: HeaderAcceptApplicationSdp,
+		HeaderContentType: HeaderAcceptApplicationSdp,
 	}
 	_, err := session.writeCmdReadResp(MethodAnnounce, session.urlCtx.RawUrlWithoutUserInfo, headers, string(session.sdpCtx.RawSdp))
 	return err

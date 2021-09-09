@@ -44,6 +44,8 @@ type Rtmp2RtspRemuxer struct {
 	videoSsrc   uint32
 	audioPacker *rtprtcp.RtpPacker
 	videoPacker *rtprtcp.RtpPacker
+
+	seq uint16
 }
 
 type OnSdp func(sdpCtx sdp.LogicContext)
@@ -58,7 +60,70 @@ func NewRtmp2RtspRemuxer(onSdp OnSdp, onRtpPacket OnRtpPacket) *Rtmp2RtspRemuxer
 		onRtpPacket: onRtpPacket,
 		audioPt:     base.AvPacketPtUnknown,
 		videoPt:     base.AvPacketPtUnknown,
+		audioSsrc:   rand.Uint32(),
+		videoSsrc:   rand.Uint32(),
 	}
+}
+
+func (r *Rtmp2RtspRemuxer) OnRtmpMsg(msg base.RtmpMsg) {
+	//var err error
+
+	if msg.Header.MsgTypeId == base.RtmpTypeIdMetadata {
+		// noop
+		return
+	}
+
+	if !r.analyzeDone {
+		// 回调sdp
+		ctx, err := sdp.NewPack()
+		nazalog.Assert(nil, err)
+		r.analyzeDone = true
+		r.onSdp(ctx)
+	}
+	// 正常阶段
+
+	// 音视频头已通过sdp回调，rtp数据中不再包含音视频头
+	if msg.IsAvcKeySeqHeader() || msg.IsHevcKeySeqHeader() || msg.IsAacSeqHeader() {
+		return
+	}
+
+	//if msg.Header.MsgTypeId == base.RtmpTypeIdAudio || msg.Header.MsgTypeId == base.RtmpTypeIdVideo {
+	//	nazalog.Println("BCD: ", hex.EncodeToString(msg.Payload[1:]))
+	//}
+
+	r.doRemux(msg)
+}
+
+func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
+	var rtppkts []rtprtcp.RtpPacket
+	switch msg.Header.MsgTypeId {
+	case base.RtmpTypeIdAudio:
+		pkg := base.AvPacket{
+			Timestamp:   msg.Header.TimestampAbs,
+			PayloadType: r.audioPt,
+			Payload:     msg.Payload[1:],
+		}
+		h := rtprtcp.MakeDefaultRtpHeader()
+		h.Mark = 0
+		h.PacketType = 14
+		h.Seq = r.genSeq()
+		h.Timestamp = uint32(float64(pkg.Timestamp) * float64(44) / 1000)
+		h.Ssrc = r.audioSsrc
+		pkt := rtprtcp.MakeRtpPacket(h, pkg.Payload)
+		rtppkts = append(rtppkts, pkt)
+	case base.RtmpTypeIdVideo:
+
+	}
+
+	for i := range rtppkts {
+		r.onRtpPacket(rtppkts[i])
+	}
+}
+
+func (r *Rtmp2RtspRemuxer) genSeq() (ret uint16) {
+	ret = r.seq
+	r.seq++
+	return
 }
 
 // @param msg: 函数调用结束后，内部不持有`msg`内存块
