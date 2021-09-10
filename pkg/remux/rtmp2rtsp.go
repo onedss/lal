@@ -105,11 +105,13 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 		}
 		payload := make([]byte, 4+len(pkg.Payload))
 		copy(payload[4:], pkg.Payload)
+		//timeUnix:=time.Now().Unix()
+		//nazalog.Println(timeUnix)
 		h := rtprtcp.MakeDefaultRtpHeader()
 		h.Mark = 0
 		h.PacketType = 14
 		h.Seq = r.genSeq()
-		h.Timestamp = pkg.Timestamp //uint32(float64(pkg.Timestamp) * float64(44) / 1000)
+		h.Timestamp = uint32(float64(pkg.Timestamp)*float64(44000)/1000) - 5
 		h.Ssrc = r.audioSsrc
 		pkt := rtprtcp.MakeRtpPacket(h, payload)
 		rtppkts = append(rtppkts, pkt)
@@ -123,8 +125,8 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 }
 
 func (r *Rtmp2RtspRemuxer) genSeq() (ret uint16) {
-	ret = r.seq
 	r.seq++
+	ret = r.seq
 	return
 }
 

@@ -22,6 +22,7 @@ var aliveSessionCount int32
 func main() {
 	_ = nazalog.Init(func(option *nazalog.Option) {
 		option.AssertBehavior = nazalog.AssertFatal
+		option.ShortFileFlag = false
 	})
 	defer nazalog.Sync()
 
