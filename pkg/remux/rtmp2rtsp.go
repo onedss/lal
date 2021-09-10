@@ -103,13 +103,15 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 			PayloadType: r.audioPt,
 			Payload:     msg.Payload[1:],
 		}
+		payload := make([]byte, 4+len(pkg.Payload))
+		copy(payload[4:], pkg.Payload)
 		h := rtprtcp.MakeDefaultRtpHeader()
 		h.Mark = 0
 		h.PacketType = 14
 		h.Seq = r.genSeq()
-		h.Timestamp = uint32(float64(pkg.Timestamp) * float64(44) / 1000)
+		h.Timestamp = pkg.Timestamp //uint32(float64(pkg.Timestamp) * float64(44) / 1000)
 		h.Ssrc = r.audioSsrc
-		pkt := rtprtcp.MakeRtpPacket(h, pkg.Payload)
+		pkt := rtprtcp.MakeRtpPacket(h, payload)
 		rtppkts = append(rtppkts, pkt)
 	case base.RtmpTypeIdVideo:
 
