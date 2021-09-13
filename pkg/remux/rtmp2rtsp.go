@@ -81,6 +81,9 @@ func (r *Rtmp2RtspRemuxer) OnRtmpMsg(msg base.RtmpMsg) {
 		r.onSdp(ctx)
 	}
 	// 正常阶段
+	if r.analyzeDone {
+
+	}
 
 	// 音视频头已通过sdp回调，rtp数据中不再包含音视频头
 	if msg.IsAvcKeySeqHeader() || msg.IsHevcKeySeqHeader() || msg.IsAacSeqHeader() {
@@ -105,13 +108,13 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 		}
 		payload := make([]byte, 4+len(pkg.Payload))
 		copy(payload[4:], pkg.Payload)
-		//timeUnix:=time.Now().Unix()
+		//timeUnix:=time.Now().UnixNano() / 1e6
 		//nazalog.Println(timeUnix)
 		h := rtprtcp.MakeDefaultRtpHeader()
 		h.Mark = 0
 		h.PacketType = 14
 		h.Seq = r.genSeq()
-		h.Timestamp = uint32(float64(pkg.Timestamp)*float64(44000)/1000) - 5
+		h.Timestamp = uint32(float64(pkg.Timestamp) * 44.1 * 2)
 		h.Ssrc = r.audioSsrc
 		pkt := rtprtcp.MakeRtpPacket(h, payload)
 		rtppkts = append(rtppkts, pkt)

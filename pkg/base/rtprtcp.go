@@ -13,6 +13,9 @@ const (
 	// 但是我还遇到过：
 	// HEVC使用96
 	// AVC使用105
+	RtpPacketTypeMpa       = 14
+	RtpPacketTypeMp2T      = 33
+	RtpPacketTypeH263      = 34
 	RtpPacketTypeAvcOrHevc = 96
 	RtpPacketTypeAac       = 97
 	RtpPacketTypeHevc      = 98
