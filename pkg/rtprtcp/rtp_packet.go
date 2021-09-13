@@ -68,12 +68,29 @@ type RtpPacket struct {
 	positionType uint8
 }
 
+type RtpControl struct {
+	Format     uint8   //数据格式 2: MP3 10: HE-AAC
+	SampleRate float64 //采样率，单位kHz
+	SampleSize uint8   //采样位数，单位bit，默认16bit
+	ChannelNum uint8   //通道数 1: 单声道 2: 立体声
+	PacketType uint8
+}
+
 func (h *RtpHeader) PackTo(out []byte) {
 	out[0] = h.CsrcCount | (h.Extension << 4) | (h.Padding << 5) | (h.Version << 6)
 	out[1] = h.PacketType | (h.Mark << 7)
 	bele.BePutUint16(out[2:], h.Seq)
 	bele.BePutUint32(out[4:], h.Timestamp)
 	bele.BePutUint32(out[8:], h.Ssrc)
+}
+
+func MakeDefaultRtpControl() RtpControl {
+	return RtpControl{
+		Format:     2,    //音频格式 MP3
+		SampleRate: 44.1, //44.1kHz
+		SampleSize: 16,   //16位
+		ChannelNum: 2,    //通道数
+	}
 }
 
 func MakeDefaultRtpHeader() RtpHeader {

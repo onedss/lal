@@ -46,6 +46,8 @@ type Rtmp2RtspRemuxer struct {
 	videoPacker *rtprtcp.RtpPacker
 
 	seq uint16
+
+	control rtprtcp.RtpControl
 }
 
 type OnSdp func(sdpCtx sdp.LogicContext)
@@ -74,27 +76,55 @@ func (r *Rtmp2RtspRemuxer) OnRtmpMsg(msg base.RtmpMsg) {
 	}
 
 	if !r.analyzeDone {
+		if msg.Header.MsgTypeId == base.RtmpTypeIdAudio {
+			controlByte := msg.Payload[0]
+			r.control = parseRtpControl(controlByte)
+		}
 		// 回调sdp
-		ctx, err := sdp.NewPack()
+		ctx, err := sdp.NewPack(r.control.PacketType)
 		nazalog.Assert(nil, err)
 		r.analyzeDone = true
 		r.onSdp(ctx)
 	}
 	// 正常阶段
-	if r.analyzeDone {
-
-	}
 
 	// 音视频头已通过sdp回调，rtp数据中不再包含音视频头
-	if msg.IsAvcKeySeqHeader() || msg.IsHevcKeySeqHeader() || msg.IsAacSeqHeader() {
-		return
-	}
+	//if msg.IsAvcKeySeqHeader() || msg.IsHevcKeySeqHeader() || msg.IsAacSeqHeader() {
+	//	return
+	//}
 
 	//if msg.Header.MsgTypeId == base.RtmpTypeIdAudio || msg.Header.MsgTypeId == base.RtmpTypeIdVideo {
 	//	nazalog.Println("BCD: ", hex.EncodeToString(msg.Payload[1:]))
 	//}
 
 	r.doRemux(msg)
+}
+
+func parseRtpControl(control byte) rtprtcp.RtpControl {
+	format := control >> 4 & 0xF
+	sampleRate := control >> 2 & 0x3
+	sampleSize := control >> 1 & 0x1
+	channelNum := control & 0x1
+	rtmpBodyControl := rtprtcp.MakeDefaultRtpControl()
+	rtmpBodyControl.Format = format
+	switch format {
+	case 2:
+		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeMpa)
+	case 10:
+		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeAac)
+	default:
+		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeMpa)
+	}
+	if sampleRate == 3 {
+		rtmpBodyControl.SampleRate = 44.1
+	}
+	if sampleSize == 1 {
+		rtmpBodyControl.SampleSize = 16
+	}
+	if channelNum == 1 {
+		rtmpBodyControl.ChannelNum = 2
+	}
+	return rtmpBodyControl
 }
 
 func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
@@ -112,9 +142,12 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 		//nazalog.Println(timeUnix)
 		h := rtprtcp.MakeDefaultRtpHeader()
 		h.Mark = 0
-		h.PacketType = 14
+		packetType := r.control.PacketType
+		h.PacketType = packetType
 		h.Seq = r.genSeq()
-		h.Timestamp = uint32(float64(pkg.Timestamp) * 44.1 * 2)
+		sampleRate := r.control.SampleRate
+		channelNum := r.control.ChannelNum
+		h.Timestamp = uint32(float64(pkg.Timestamp) * sampleRate * float64(channelNum))
 		h.Ssrc = r.audioSsrc
 		pkt := rtprtcp.MakeRtpPacket(h, payload)
 		rtppkts = append(rtppkts, pkt)

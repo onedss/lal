@@ -19,14 +19,14 @@ import (
 	"github.com/onedss/lal/pkg/base"
 )
 
-func NewPack() (ctx LogicContext, err error) {
-	sdpStr := `v=0
+func NewPack(pt uint8) (ctx LogicContext, err error) {
+	tmpl := `v=0
 o=- 0 0 IN IP4 127.0.0.1
 c=IN IP4 127.0.0.1
 t=0 0
-m=audio 0 RTP/AVP 14
+m=audio 0 RTP/AVP %d
 a=control:trackID=1`
-
+	sdpStr := fmt.Sprintf(tmpl, pt)
 	raw := []byte(strings.ReplaceAll(sdpStr, "\n", "\r\n"))
 	ctx, err = ParseSdp2LogicContext(raw)
 	return
