@@ -78,7 +78,8 @@ func (r *Rtmp2RtspRemuxer) OnRtmpMsg(msg base.RtmpMsg) {
 	if !r.analyzeDone {
 		if msg.Header.MsgTypeId == base.RtmpTypeIdAudio {
 			controlByte := msg.Payload[0]
-			r.control = parseRtpControl(controlByte)
+			r.control = parseRtmpControl(controlByte)
+			r.audioPt = (base.AvPacketPt)(r.control.PacketType)
 		}
 		// 回调sdp
 		ctx, err := sdp.NewPack(r.control.PacketType)
@@ -100,7 +101,7 @@ func (r *Rtmp2RtspRemuxer) OnRtmpMsg(msg base.RtmpMsg) {
 	r.doRemux(msg)
 }
 
-func parseRtpControl(control byte) rtprtcp.RtpControl {
+func parseRtmpControl(control byte) rtprtcp.RtpControl {
 	format := control >> 4 & 0xF
 	sampleRate := control >> 2 & 0x3
 	sampleSize := control >> 1 & 0x1
@@ -136,6 +137,7 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 			PayloadType: r.audioPt,
 			Payload:     msg.Payload[1:],
 		}
+
 		payload := make([]byte, 4+len(pkg.Payload))
 		copy(payload[4:], pkg.Payload)
 		//timeUnix:=time.Now().UnixNano() / 1e6

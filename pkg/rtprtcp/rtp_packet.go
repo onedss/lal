@@ -90,6 +90,7 @@ func MakeDefaultRtpControl() RtpControl {
 		SampleRate: 44.1, //44.1kHz
 		SampleSize: 16,   //16位
 		ChannelNum: 2,    //通道数
+		PacketType: 14,   //PT=14，表示MP3
 	}
 }
 
