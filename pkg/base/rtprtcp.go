@@ -14,6 +14,8 @@ const (
 	// HEVC使用96
 	// AVC使用105
 	RtpPacketTypeMpa       = 14
+	RtpPacketTypeH261      = 31
+	RtpPacketTypeMPV       = 32
 	RtpPacketTypeMp2T      = 33
 	RtpPacketTypeH263      = 34
 	RtpPacketTypeAvcOrHevc = 96

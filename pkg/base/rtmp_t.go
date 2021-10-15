@@ -67,6 +67,23 @@ const (
 	RtmpAacPacketTypeRaw             = 1
 )
 
+const (
+	RtmpControlLinearPCMPlatform uint8 = 0
+	RtmpControlADPCM             uint8 = 1
+	RtmpControlMP3               uint8 = 2
+	RtmpControlLinearPCMLittle   uint8 = 3
+	RtmpControl16kMono           uint8 = 4
+	RtmpControl8kMono            uint8 = 5
+	RtmpControlNellymoser        uint8 = 6
+	RtmpControlALawPCM           uint8 = 7
+	RtmpControlMuLawPCM          uint8 = 8
+	RtmpControlReserved          uint8 = 9
+	RtmpControlAAC               uint8 = 10
+	RtmpControlSpeex             uint8 = 11
+	RtmpControlMP3for8KHz        uint8 = 14
+	RtmpControlDeviceSpecific    uint8 = 15
+)
+
 type RtmpHeader struct {
 	Csid         int
 	MsgLen       uint32 // 不包含header的大小

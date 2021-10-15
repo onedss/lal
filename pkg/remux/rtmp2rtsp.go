@@ -101,33 +101,6 @@ func (r *Rtmp2RtspRemuxer) OnRtmpMsg(msg base.RtmpMsg) {
 	r.doRemux(msg)
 }
 
-func parseRtmpControl(control byte) rtprtcp.RtpControl {
-	format := control >> 4 & 0xF
-	sampleRate := control >> 2 & 0x3
-	sampleSize := control >> 1 & 0x1
-	channelNum := control & 0x1
-	rtmpBodyControl := rtprtcp.MakeDefaultRtpControl()
-	rtmpBodyControl.Format = format
-	switch format {
-	case 2:
-		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeMpa)
-	case 10:
-		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeAac)
-	default:
-		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeMpa)
-	}
-	if sampleRate == 3 {
-		rtmpBodyControl.SampleRate = 44.1
-	}
-	if sampleSize == 1 {
-		rtmpBodyControl.SampleSize = 16
-	}
-	if channelNum == 1 {
-		rtmpBodyControl.ChannelNum = 2
-	}
-	return rtmpBodyControl
-}
-
 func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 	var rtppkts []rtprtcp.RtpPacket
 	switch msg.Header.MsgTypeId {
@@ -137,7 +110,9 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 			PayloadType: r.audioPt,
 			Payload:     msg.Payload[1:],
 		}
+		if pkg.PayloadType == base.AvPacketPtAac {
 
+		}
 		payload := make([]byte, 4+len(pkg.Payload))
 		copy(payload[4:], pkg.Payload)
 		//timeUnix:=time.Now().UnixNano() / 1e6
@@ -160,6 +135,33 @@ func (r *Rtmp2RtspRemuxer) doRemux(msg base.RtmpMsg) {
 	for i := range rtppkts {
 		r.onRtpPacket(rtppkts[i])
 	}
+}
+
+func parseRtmpControl(control byte) rtprtcp.RtpControl {
+	format := control >> 4 & 0xF
+	sampleRate := control >> 2 & 0x3
+	sampleSize := control >> 1 & 0x1
+	channelNum := control & 0x1
+	rtmpBodyControl := rtprtcp.MakeDefaultRtpControl()
+	rtmpBodyControl.Format = format
+	switch format {
+	case base.RtmpControlMP3:
+		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeMpa)
+	case base.RtmpControlAAC:
+		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeAac)
+	default:
+		rtmpBodyControl.PacketType = uint8(base.RtpPacketTypeMpa)
+	}
+	if sampleRate == 3 {
+		rtmpBodyControl.SampleRate = 44.1
+	}
+	if sampleSize == 1 {
+		rtmpBodyControl.SampleSize = 16
+	}
+	if channelNum == 1 {
+		rtmpBodyControl.ChannelNum = 2
+	}
+	return rtmpBodyControl
 }
 
 func (r *Rtmp2RtspRemuxer) genSeq() (ret uint16) {

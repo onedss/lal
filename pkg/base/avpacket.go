@@ -13,6 +13,8 @@ type AvPacketPt int
 const (
 	AvPacketPtUnknown AvPacketPt = -1
 	AvPacketPtMpa     AvPacketPt = RtpPacketTypeMpa
+	AvPacketPtH261    AvPacketPt = RtpPacketTypeH261
+	AvPacketPtMPV     AvPacketPt = RtpPacketTypeMPV
 	AvPacketPtMp2T    AvPacketPt = RtpPacketTypeMp2T
 	AvPacketPtH263    AvPacketPt = RtpPacketTypeH263
 	AvPacketPtAvc     AvPacketPt = RtpPacketTypeAvcOrHevc
@@ -34,6 +36,10 @@ func (a AvPacketPt) ReadableString() string {
 		return "unknown"
 	case AvPacketPtMpa:
 		return "mpa"
+	case AvPacketPtH261:
+		return "h261"
+	case AvPacketPtMPV:
+		return "hpv"
 	case AvPacketPtMp2T:
 		return "mp2t"
 	case AvPacketPtH263:
